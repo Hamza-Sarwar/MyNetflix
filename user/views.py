@@ -1,11 +1,8 @@
-from django.shortcuts import render
+
 from django.contrib.auth import login
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserSerializer, RegisterSerializer
-from django.contrib.auth.models import User
-from rest_framework.authentication import TokenAuthentication
 from rest_framework import generics
 from knox.models import AuthToken
 from rest_framework.authtoken.serializers import AuthTokenSerializer
