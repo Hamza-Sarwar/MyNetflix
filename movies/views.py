@@ -4,10 +4,12 @@ from rest_framework import status
 from rest_framework import permissions
 from .models import Movie
 from .serializers import MovieSerializer
+from rest_framework.generics import GenericAPIView
 
 
-class MovieAPIView(APIView):
+class MovieAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    serializer_class = MovieSerializer
 
     def get(self, request, *args, **kwargs):
         movies = Movie.objects.all()
@@ -26,9 +28,9 @@ class MovieAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class MovieDetailAPIView(APIView):
+class MovieDetailAPIView(GenericAPIView):
   permission_classes = [permissions.AllowAny]
-
+  serializer_class = MovieSerializer
   def delete(self, request, id, *args, **kwargs):
       if Movie.objects.filter(id=id).exists():
         movie = Movie.objects.get(id=id)
@@ -46,7 +48,7 @@ class MovieDetailAPIView(APIView):
       data = {
       'title': request.data.get('title'),
       'description': request.data.get('description'),
-          'genre': request.data.get('genre'),
+        'genre': request.data.get('genre'),
       }
       serializer = MovieSerializer(instance = movie, data=data, partial = True)
       if serializer.is_valid():

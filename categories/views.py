@@ -4,11 +4,12 @@ from rest_framework import status
 from rest_framework import permissions
 from .models import Category
 from .serializers import CategorySerializer
+from rest_framework.generics import GenericAPIView
 # Create your views here.
 
-class CategoryAPIView(APIView):
+class CategoryAPIView(GenericAPIView):
     permission_classes = [permissions.AllowAny]
-
+    serializer_class = CategorySerializer
     def get(self, request, *args, **kwargs):
         projects = Category.objects.all()
         serializer = CategorySerializer(projects, many=True)
@@ -24,8 +25,11 @@ class CategoryAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-class CategoryDetailAPIView(APIView):
+
+
+class CategoryDetailAPIView(GenericAPIView):
   permission_classes = [permissions.AllowAny]
+  serializer_class = CategorySerializer
 
   def delete(self, request, id, *args, **kwargs):
       if Category.objects.filter(id=id).exists():
